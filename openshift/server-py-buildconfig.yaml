@@ -1,0 +1,42 @@
+# Server FastAPI BuildConfig
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: server-fastapi
+  labels:
+    app: server-fastapi
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: server-fastapi:latest
+  source:
+    type: Git
+    git:
+      uri: https://github.com/repo.git
+      ref: main
+    contextDir: ""
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  resources:
+    limits:
+      memory: 4Gi
+      cpu: "1"
+    requests:
+      memory: 2Gi
+      cpu: "1"
+  triggers:
+    - type: ConfigChange
+    - type: GitHub
+      github:
+        secret: github-webhook-secret-fastapi
+    - type: ImageChange
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: server-fastapi
+  labels:
+    app: server-fastapi
