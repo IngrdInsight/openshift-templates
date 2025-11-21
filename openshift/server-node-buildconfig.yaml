@@ -1,0 +1,35 @@
+# Server (Fastify) BuildConfig
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: server
+  labels:
+    app: server
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: server:latest
+  source:
+    type: Git
+    git:
+      uri: https://github.com/repo.git
+      ref: main
+    contextDir: ""
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  triggers:
+    - type: ConfigChange
+    - type: GitHub
+      github:
+        secret: github-webhook-secret-server
+    - type: ImageChange
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: server
+  labels:
+    app: server

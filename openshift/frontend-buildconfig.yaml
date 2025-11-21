@@ -1,0 +1,40 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  resources:
+    limits:
+      memory: 4Gi
+      cpu: "1"
+    requests:
+      memory: 2Gi
+      cpu: "500m"
+  output:
+    to:
+      kind: ImageStreamTag
+      name: frontend:latest
+  source:
+    type: Git
+    git:
+      uri: https://github.com/repo.git
+      ref: main
+    contextDir: ""
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  triggers:
+    - type: ConfigChange
+    - type: GitHub
+      github:
+        secret: github-webhook-secret-frontend
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: frontend
+  labels:
+    app: frontend
