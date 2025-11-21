@@ -78,6 +78,14 @@ spec:
               value: "5532"
             - name: DB_HOST
               value: "postgres"
+            - name: HOME
+              value: /tmp
+            - name: NUMBA_CACHE_DIR
+              value: /tmp/numba_cache
+            - name: HF_HOME
+              value: /tmp/huggingface_cache
+            - name: TRANSFORMERS_CACHE
+              value: /tmp/huggingface_cache
           livenessProbe:
             httpGet:
               path: /health
